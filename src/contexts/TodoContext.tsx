@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { Todo } from '../types/Todo';
 import { v4 as uuidv4 } from 'uuid';
 import { TodoContext } from './TodoContextType';
@@ -10,6 +10,9 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [todos, setTodos] = useState<Todo[]>(() => loadTodos());
 
   const showToast = useToast();
+
+  // Avoid persisting immediately after hydration
+  const isFirstRender = useRef(true);
 
   const addTodo = (title: string, description: string) => {
     const newTodo: Todo = {
@@ -36,6 +39,11 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Persist every change to sessionStorage
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     const success = saveTodos(todos);
     if (!success) {
       showToast(
