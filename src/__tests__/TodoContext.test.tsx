@@ -19,7 +19,7 @@ const TestComponent = () => {
         <div key={todo.id} data-testid={`todo-item-${todo.id}`}>
           <span data-testid={`todo-title-${todo.id}`}>{todo.title}</span>
           <span data-testid={`todo-desc-${todo.id}`}>{todo.description}</span>
-          <span data-testid={`todo-completed-${todo.id}`}>{{todo.completed ? 'Completed' : 'Not completed'}}</span>
+          <span data-testid={`todo-completed-${todo.id}`}>{todo.completed ? 'Completed' : 'Not completed'}</span>
           <button data-testid={`toggle-${todo.id}`} onClick={() => toggleTodoCompletion(todo.id)}>
             Toggle
           </button>
