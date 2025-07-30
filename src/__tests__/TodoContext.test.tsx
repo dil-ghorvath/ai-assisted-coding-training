@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { TodoProvider } from '../contexts/TodoContext';
 import { ToastProvider } from '../contexts/ToastContext';
 import { useTodo } from '../hooks/useTodo';
-import { beforeEach } from 'vitest';
 // import { act } from 'react-dom/test-utils';
 
 const TestComponent = () => {

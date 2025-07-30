@@ -36,9 +36,7 @@ export const loadTodos = (): Todo[] => {
     const parsed = JSON.parse(raw);
     if (!isValidTodos(parsed)) throw new Error('Invalid data');
 
-    // Rehydrate `createdAt` back into Date instances. We know the shape at
-    // this point thanks to the type guard, but `createdAt` is still a string
-    // after JSON.parse – convert it back.
+    // Rehydrate `createdAt` back into Date instances.
     type PersistedTodo = Omit<Todo, 'createdAt'> & { createdAt: string };
     return (parsed as unknown as PersistedTodo[]).map(todo => ({
       ...todo,
@@ -53,8 +51,7 @@ export const loadTodos = (): Todo[] => {
 /**
  * Persists the given todos array to `window.sessionStorage`.
  * Returns `true` if the write succeeded or `false` if a QuotaExceededError was
- * encountered. Any other error is re-thrown because something genuinely
- * unexpected happened.
+ * encountered.
  */
 export const saveTodos = (todos: Todo[]): boolean => {
   if (typeof window === 'undefined' || !window.sessionStorage) return true;
@@ -63,19 +60,17 @@ export const saveTodos = (todos: Todo[]): boolean => {
     window.sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(todos));
     return true;
   } catch (err: unknown) {
-    const isQuotaError =
-      (err && typeof err === 'object' && 'name' in err && (err as { name: string }).name === 'QuotaExceededError') ||
-      (err instanceof DOMException && err.code === 22);
-
-    if (isQuotaError) {
-      // Swallow quota errors – caller can decide how to surface to the user.
-      console.warn(
-        'Storage quota exceeded – your latest changes may not be saved.'
-      );
+    if (isQuotaExceededError(err)) {
+      console.warn('Storage quota exceeded – your latest changes may not be saved.');
       return false;
     }
-
-    // Bubble up any other type of failure – this should be extremely rare.
     throw err;
   }
+};
+
+const isQuotaExceededError = (err: unknown): boolean => {
+  return (
+    (err && typeof err === 'object' && 'name' in err && (err as { name: string }).name === 'QuotaExceededError') ||
+    (err instanceof DOMException && err.code === 22)
+  );
 };
