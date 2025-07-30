@@ -2,6 +2,7 @@ import './App.css';
 import { CssBaseline, Container, Box, Paper } from '@mui/material';
 import { AtlasThemeProvider } from './providers/ThemeProvider';
 import { TodoProvider } from './contexts/TodoContext';
+import { ToastProvider } from './contexts/ToastContext';
 import { Header } from './components/Layout/Header';
 import { Footer } from './components/Layout/Footer';
 import { TodoList } from './components/TodoList/TodoList';
@@ -17,6 +18,7 @@ function App() {
   return (
     <AtlasThemeProvider>
       <CssBaseline />
+      <ToastProvider>
       <TodoProvider>
         <Box
           sx={{
@@ -62,6 +64,7 @@ function App() {
           <Footer />
         </Box>
       </TodoProvider>
+      </ToastProvider>
     </AtlasThemeProvider>
   );
 }

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TodoProvider } from '../contexts/TodoContext';
+import { ToastProvider } from '../contexts/ToastContext';
 import { useTodo } from '../hooks/useTodo';
 // import { act } from 'react-dom/test-utils';
 
@@ -17,9 +18,7 @@ const TestComponent = () => {
         <div key={todo.id} data-testid={`todo-item-${todo.id}`}>
           <span data-testid={`todo-title-${todo.id}`}>{todo.title}</span>
           <span data-testid={`todo-desc-${todo.id}`}>{todo.description}</span>
-          <span data-testid={`todo-completed-${todo.id}`}>
-            {todo.completed ? 'Completed' : 'Not completed'}
-          </span>
+          <span data-testid={`todo-completed-${todo.id}`}>{todo.completed ? 'Completed' : 'Not completed'}</span>
           <button data-testid={`toggle-${todo.id}`} onClick={() => toggleTodoCompletion(todo.id)}>
             Toggle
           </button>
@@ -33,11 +32,17 @@ const TestComponent = () => {
 };
 
 describe('TodoContext', () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+  });
+
   it('provides empty todos array initially', () => {
     render(
-      <TodoProvider>
-        <TestComponent />
-      </TodoProvider>
+      <ToastProvider>
+        <TodoProvider>
+          <TestComponent />
+        </TodoProvider>
+      </ToastProvider>
     );
 
     expect(screen.getByTestId('todo-count').textContent).toBe('0');
@@ -47,9 +52,11 @@ describe('TodoContext', () => {
     const user = userEvent.setup();
 
     render(
-      <TodoProvider>
-        <TestComponent />
-      </TodoProvider>
+      <ToastProvider>
+        <TodoProvider>
+          <TestComponent />
+        </TodoProvider>
+      </ToastProvider>
     );
 
     await user.click(screen.getByTestId('add-todo'));
@@ -63,9 +70,11 @@ describe('TodoContext', () => {
     const user = userEvent.setup();
 
     render(
-      <TodoProvider>
-        <TestComponent />
-      </TodoProvider>
+      <ToastProvider>
+        <TodoProvider>
+          <TestComponent />
+        </TodoProvider>
+      </ToastProvider>
     );
 
     await user.click(screen.getByTestId('add-todo'));
@@ -90,9 +99,11 @@ describe('TodoContext', () => {
     const user = userEvent.setup();
 
     render(
-      <TodoProvider>
-        <TestComponent />
-      </TodoProvider>
+      <ToastProvider>
+        <TodoProvider>
+          <TestComponent />
+        </TodoProvider>
+      </ToastProvider>
     );
 
     await user.click(screen.getByTestId('add-todo'));
